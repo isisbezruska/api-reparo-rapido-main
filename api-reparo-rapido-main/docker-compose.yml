@@ -1,0 +1,35 @@
+version: '3.2'
+services:
+  api:
+    build: .
+    command: sh -c "yarn && yarn start:dev"
+    environment:
+      #APP
+      NODE_ENV: development
+      #DB
+      POSTGRES_HOST: db_local
+      POSTGRES_DB: reparo_rapido
+      POSTGRES_USER: reparo_rapido
+      POSTGRES_PASSWORD: reparo_rapido
+      POSTGRES_PORT: 5432
+      #AWS
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      BUCKET_NAME: ${BUCKET_NAME}
+    depends_on:
+      - db_local
+    volumes:
+      - .:/app
+      - ~/.config:/root/.config
+      - /node_modules
+    ports:
+      - '3001:3001'
+  db_local:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: reparo_rapido
+      POSTGRES_USER: reparo_rapido
+      POSTGRES_PASSWORD: reparo_rapido
+    ports:
+      - 5432:5432
